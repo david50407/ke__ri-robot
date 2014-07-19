@@ -151,28 +151,12 @@ def checkcommand()
 		return json 
 	end
 	json["plurks"].each{|pl|
-		if pl["content_raw"] =~/GEJI[姐|姊] ([\W|\w|\u4e00-\u9fa5]+)/ 
+		if pl["owner_id"] == 8514425  #5845208  <---ㄎㄎㄖid
 			
-			a= [pl["owner_id"],9472755]
+			responsePlurk(pl["plurk_id"],"UCCU")
+		else 
+			print("none\n")
 
-			when /wenow|now weather|現在([\W|\w|\u4e00-\u9fa5]*)天氣/
-				site = $~[1]
-				
-				if checkresponse(pl["plurk_id"]) == true
-					printf site
-					printf "\n"
-					responsePlurk(pl["plurk_id"],"是 知道了")
-					
-					s = weatherString("now",site,2)
-			
-					responsePlurk(pl["plurk_id"],s)
-					print pl["plurk_id"].to_s+"done"+"\n"
-					f=true
-				else 
-					#print pl["plurk_id"].to_s+"had yet"+"\n"
-				end 
-
-			end 
 		end
 		
 	}
@@ -205,14 +189,14 @@ def recordError(text)
 	end
 end
 
-print "Today weather ykikana start"+"\n"
+print "ke ke ri robot start"+"\n"
 
 Thread.new{
 	while true
 		t = Time.now
 		begin
 		#print "checkcommand start "+"\n"
-		checkcommand()
+		#checkcommand()
 		#print "checkcommand end "+"\n"
 		sleep 1
 		rescue
@@ -231,10 +215,10 @@ while true
 	case gets.chomp
 
 		when "check"
-			checkcommand()
+			p(checkcommand())
 		
 		when "get"
-			printgetUnreadPlurk()
+			print(getUnreadPlurk())
 		
 		when "close"
 			break

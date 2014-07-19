@@ -1,4 +1,4 @@
-@setting = {"APIKEY" => "","APISECRET" => "","TOKENKEY" => "","TOKENSECRET" => "","MYSITE" => ""}
+@setting = {"APIKEY" => "","APISECRET" => "","TOKENKEY" => "","TOKENSECRET" => ""}
 @filename = "setting.db"
 
 def settinginit
