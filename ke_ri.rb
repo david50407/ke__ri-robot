@@ -135,7 +135,7 @@ def checkcommand()
 	begin 
 		while true
 			if $prevent_flag == true
-				json = $plurk.post('/APP/Timeline/getPlurks',{:limit=>10})
+				json = $plurk.post('/APP/Timeline/getUnreadPlurks',{:limit=>20})
 				break
 			end
 		end
@@ -146,21 +146,22 @@ def checkcommand()
 		sleep 5
 		retry
 	end	
-	if json == nil
-		print "get plurk return nil"+"\n"
+	if json["plurks"] == nil
+		#print "get plurk return nil"+"\n"
 		return json 
-	end
+	else
 	json["plurks"].each{|pl|
-		if pl["owner_id"] == 8514425  #5845208  <---ㄎㄎㄖid
+		if pl["owner_id"] == 5845208  #<---ㄎㄎㄖid   8514425 
 			
-			responsePlurk(pl["plurk_id"],"UCCU")
+			responsePlurk(pl["plurk_id"],"ㄎ__ㄖ")
+			json = $plurk.post('/APP/Timeline/markAsRead',{:ids=>pl["plurk_id"]})
 		else 
-			print("none\n")
+			#print("none\n")
 
 		end
 		
 	}
-	
+	end
 	return f
 end
 
@@ -196,9 +197,9 @@ Thread.new{
 		t = Time.now
 		begin
 		#print "checkcommand start "+"\n"
-		#checkcommand()
+		checkcommand()
 		#print "checkcommand end "+"\n"
-		sleep 1
+		sleep 3
 		rescue
 		print t.to_s + "checkcmd has errer" + "\n" + $!.to_s + "\n"
 		sleep 5
