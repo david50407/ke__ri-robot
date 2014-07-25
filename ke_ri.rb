@@ -119,7 +119,7 @@ def checkresponse(plurkid)
 	i = true
 	json["responses"].each{|res|
 	
-		if res["user_id"]==9472755 && res["content_raw"]=="是 知道了"
+		if res["user_id"]==10428113 && res["content_raw"]=="ㄎ__ㄖ"  #<--- 10428113 robot id
 			i = false	
 		end
 	}
@@ -151,10 +151,10 @@ def checkcommand()
 		return json 
 	else
 	json["plurks"].each{|pl|
-		if pl["owner_id"] == 5845208  #<---ㄎㄎㄖid   8514425 
+		if pl["owner_id"] == 5845208 &&  checkresponse(pl["plurk_id"]) == true 
 			
 			responsePlurk(pl["plurk_id"],"ㄎ__ㄖ")
-			json = $plurk.post('/APP/Timeline/markAsRead',{:ids=>pl["plurk_id"]})
+			json = $plurk.post('/APP/Timeline/mutePlurks',{:ids=>pl["plurk_id"]})
 		else 
 			#print("none\n")
 
