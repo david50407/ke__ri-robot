@@ -12,11 +12,11 @@ class KeKeRi
 		@setting = Setting.new
 		@plurkApi = Plurk.new(@setting.api_key, @setting.api_secret)
 		@plurkApi.authorize(@setting.token_key, @setting.token_secret)
-
-		getChannel while @channelUri.nil?
+		puts "Ke Ke Ri Robot loaded."
 	end
 
 	def listenChannel
+		getChannel while @channelUri.nil?
 		getChannel if @channelOffset == -3
 		params = { :channel => @channelName, :offset => @channelOffset }
 		params = params.map { |k,v| "#{k}=#{v}" }.join('&')
@@ -51,19 +51,20 @@ class KeKeRi
 				if plurk["owner_id"] == 5845208
 					next unless responsed? plurk["plurk_id"]
 					responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-					@plurkApi.post '/APP/Timeline/mutePlurks', ids: [plurk["plurk_id"]]
+					@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 				elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
 					next unless responsed? plurk["plurk_id"]
 					responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-					@plurkApi.post '/APP/Timeline/mutePlurks', ids: [plurk["plurk_id"]]
+					@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 				end
 			end
 		end
 	end
 
-	def addPlurk(content)
+	def addPlurk(content, options = {})
+		options = { qualifier: ':' }.merge options
 		begin
-			json = @plurkApi.post '/APP/Timeline/plurkAdd', content: content, qualifier: ':'
+			json = @plurkApi.post '/APP/Timeline/plurkAdd', content: content, qualifier: options[:qualifier]
 		rescue
 			str = %(#{Time.now.to_s} [ERROR] Adding plurk has error: #{$!.to_s})
 			if json
@@ -76,9 +77,10 @@ class KeKeRi
 		return json
 	end
 
-	def addPrivatePlurk(content, user_id)
+	def addPrivatePlurk(content, user_id, options = {})
+		options = { qualifier: ':' }.merge options
 		begin
-			json = @plurkApi.post '/APP/Timeline/plurkAdd', content: content, qualifier: ':', limited_to: [user_id]
+			json = @plurkApi.post '/APP/Timeline/plurkAdd', content: content, qualifier: options[:qualifier], limited_to: [[user_id]]
 		rescue
 			str = %(#{Time.now.to_s} [ERROR] Adding private plurk has error: #{$!.to_s})
 			if json
@@ -90,9 +92,10 @@ class KeKeRi
 		end
 	end
 
-	def responsePlurk(plurk_id, content)		
+	def responsePlurk(plurk_id, content, options = {})
+		options = { qualifier: ':' }.merge options
 		begin
-			res = @plurkApi.post '/APP/Responses/responseAdd', plurk_id: plurk_id, content: content, qualifier: ':'
+			res = @plurkApi.post '/APP/Responses/responseAdd', plurk_id: plurk_id, content: content, qualifier: options[:qualifier]
 		rescue
 			puts %(#{Time.now.to_s} [ERROR] Responsing plurk has error: #{$!.to_s})
 		end
@@ -106,11 +109,11 @@ class KeKeRi
 			if plurk["owner_id"] == 5845208
 				next unless responsed? plurk["plurk_id"]
 				responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-				@plurkApi.post '/APP/Timeline/mutePlurks', ids: [plurk["plurk_id"]]
+				@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 			elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
 				next unless responsed? plurk["plurk_id"]
 				responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-				@plurkApi.post '/APP/Timeline/mutePlurks', ids: [plurk["plurk_id"]]
+				@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 			end
 		end
 	end
@@ -160,45 +163,5 @@ class KeKeRi
 		puts 'Get channel uri: ' + @channelUri
 		puts 'Get channel name: ' + @channelName
 		return true
-	end
-end
-
-instance = KeKeRi.new
-puts "Ke Ke Ri Robot started."
-
-# Thread.new {
-#   while true
-#     begin
-#       instance.acceptAllFriends
-#       sleep 30
-#     rescue
-#       sleep 10
-#       retry
-#     end
-#   end
-# }
-Thread.new {
-	begin
-		instance.listenChannel while true
-	rescue
-		retry
-	end
-}
-
-# check unreadPlurk once on start
-begin
-	instance.checkUnreadPlurk
-rescue
-	puts %(#{Time.now.to_s} [ERROR] Checking unread plurk has error: #{$!.to_s})
-end
-
-while true
-	case gets.chomp
-	when "check"
-		p instance.checkUnreadPlurk
-	when "get"
-		p instance.getUnreadPlurk
-	when "close"
-		exit
 	end
 end
