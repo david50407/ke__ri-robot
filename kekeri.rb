@@ -62,9 +62,9 @@ class KeKeRi
 	end
 
 	def addPlurk(content, options = {})
-		options = { qualifier: ':' }.merge options
+		options = { qualifier: ':', lang: 'tr_ch' }.merge options
 		begin
-			json = @plurkApi.post '/APP/Timeline/plurkAdd', content: content, qualifier: options[:qualifier]
+			json = @plurkApi.post '/APP/Timeline/plurkAdd', options.merge(content: content)
 		rescue
 			str = %(#{Time.now.to_s} [ERROR] Adding plurk has error: #{$!.to_s})
 			if json
@@ -78,9 +78,9 @@ class KeKeRi
 	end
 
 	def addPrivatePlurk(content, user_id, options = {})
-		options = { qualifier: ':' }.merge options
+		options = { qualifier: ':', lang: 'tr_ch' }.merge options
 		begin
-			json = @plurkApi.post '/APP/Timeline/plurkAdd', content: content, qualifier: options[:qualifier], limited_to: [[user_id]]
+			json = @plurkApi.post '/APP/Timeline/plurkAdd', options.merge(content: content, limited_to: [[user_id]])
 		rescue
 			str = %(#{Time.now.to_s} [ERROR] Adding private plurk has error: #{$!.to_s})
 			if json
@@ -93,9 +93,9 @@ class KeKeRi
 	end
 
 	def responsePlurk(plurk_id, content, options = {})
-		options = { qualifier: ':' }.merge options
+		options = { qualifier: ':', lang: 'tr_ch' }.merge options
 		begin
-			res = @plurkApi.post '/APP/Responses/responseAdd', plurk_id: plurk_id, content: content, qualifier: options[:qualifier]
+			res = @plurkApi.post '/APP/Responses/responseAdd', options.merge(plurk_id: plurk_id, content: content)
 		rescue
 			puts %(#{Time.now.to_s} [ERROR] Responsing plurk has error: #{$!.to_s})
 		end
