@@ -156,7 +156,7 @@ def checkcommand()
 			responsePlurk(pl["plurk_id"],"ㄎ__ㄖ")
 			$plurk.post('/APP/Timeline/mutePlurks', ids: pl["plurk_id"])
 		elsif pl["content"].match /ㄎ[_＿]*ㄖ/
-			return unless checkresponse pl["plurk_id"]
+			next unless checkresponse pl["plurk_id"]
 			responsePlurk(pl["plurk_id"],"ㄎ__ㄖ")
 			$plurk.post('/APP/Timeline/mutePlurks', ids: pl["plurk_id"])
 		else
