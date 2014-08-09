@@ -4,10 +4,9 @@ require './setting.rb'
 require 'time'
 require 'net/http'
 #Setup OAuth client by create a instance of Plurk class
-settinginit() #read setting file
-$plurk = Plurk.new(@setting["APIKEY"], @setting["APISECRET"])
-$plurk.authorize(@setting["TOKENKEY"], @setting["TOKENSECRET"])
-$mysite = @setting["MYSITE"]
+puts @setting = Setting.new #read setting file
+$plurk = Plurk.new(@setting.api_key, @setting.api_secret)
+$plurk.authorize(@setting.token_key, @setting.token_secret)
 
 $prevent_flag = true
 
