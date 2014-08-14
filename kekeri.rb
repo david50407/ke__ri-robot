@@ -131,7 +131,7 @@ class KeKeRi
 	end
 
 	UCCU_EMOS = [
-		[%(http://emos.plurk.com/c24f5a2d357cf6bed76097cb2917135c_w48_h48.jpeg)] * 10
+		[%(http://emos.plurk.com/c24f5a2d357cf6bed76097cb2917135c_w48_h48.jpeg)] * 10,
 		[%(http://emos.plurk.com/c75c14b823b317b9485f551dc3be8adc_w48_h48.jpeg)] * 10,
 		[%(http://emos.plurk.com/e01d1a6e849e6fc957a551fdc8f8d189_w48_h48.png)] * 10,
 		[%(http://emos.plurk.com/4307884b41c65c081c00d7a707b3457a_w48_h48.png)] * 10,
