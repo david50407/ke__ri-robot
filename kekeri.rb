@@ -48,15 +48,7 @@ class KeKeRi
 			case plurk["type"]
 			when "new_response"
 			when "new_plurk"
-				if plurk["owner_id"] == 5845208
-					next unless responsed? plurk["plurk_id"]
-					responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-					@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
-				elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
-					next unless responsed? plurk["plurk_id"]
-					responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-					@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
-				end
+				responseNewPlurk plurk
 			end
 		end
 	end
@@ -106,15 +98,7 @@ class KeKeRi
 		return if json["plurks"].nil?
 
 		json["plurks"].each do |plurk|
-			if plurk["owner_id"] == 5845208
-				next unless responsed? plurk["plurk_id"]
-				responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-				@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
-			elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
-				next unless responsed? plurk["plurk_id"]
-				responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-				@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
-			end
+			responseNewPlurk plurk
 		end
 	end
 
@@ -141,9 +125,30 @@ class KeKeRi
 			retry
 		end
 		json["responses"].each do |res|
-			return false if res["user_id"] == 10428113 && res["content_raw"] == "ㄎ__ㄖ"  #<--- 10428113 robot id
+			return false if res["user_id"] == 10428113 #<--- 10428113 robot id
 		end
 		true
+	end
+
+	UCCU_EMOS = [
+		[%(http://emos.plurk.com/c24f5a2d357cf6bed76097cb2917135c_w48_h48.jpeg)] * 10
+		[%(http://emos.plurk.com/c75c14b823b317b9485f551dc3be8adc_w48_h48.jpeg)] * 10,
+		[%(http://emos.plurk.com/e01d1a6e849e6fc957a551fdc8f8d189_w48_h48.png)] * 10,
+		[%(http://emos.plurk.com/4307884b41c65c081c00d7a707b3457a_w48_h48.png)] * 10,
+		[%(http://emos.plurk.com/2ab4aa6dfacda9b2443a083915bef84f_w48_h48.jpeg --Double Kill--)] * 1
+	].flatten
+	def responseNewPlurk(plurk)
+		return unless responsed? plurk["plurk_id"]
+		if plurk["owner_id"] == 5845208
+			responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
+		elsif plurk["content"].match /<a[^>]*href="http:\/\/www.plurk.com\/andy810625"[^>]*>/ # @andy810625
+			responsePlurk plurk["plurk_id"], UCCU_EMOS.sample
+		elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
+			responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
+		elsif plurk["content"].match /UCCU/i
+			responsePlurk plurk["plurk_id"], UCCU_EMOS.sample
+		end
+		@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 	end
 
 	def getChannel
