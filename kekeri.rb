@@ -139,15 +139,15 @@ class KeKeRi
 	].flatten
 	def responseNewPlurk(plurk)
 		return unless responsed? plurk["plurk_id"]
-		if plurk["owner_id"] == 5845208
-			responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-		elsif plurk["content"].match /<a[^>]*href="http:\/\/www.plurk.com\/andy810625"[^>]*>/ # @andy810625
-			responsePlurk plurk["plurk_id"], UCCU_EMOS.sample
-		elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
-			responsePlurk plurk["plurk_id"], "ㄎ__ㄖ"
-		elsif plurk["content"].match /UCCU/i
-			responsePlurk plurk["plurk_id"], UCCU_EMOS.sample
+		resp = []
+		if plurk["owner_id"] == 5845208 or plurk["content"].match /ㄎ[_＿]*ㄖ/
+			resp << "ㄎ__ㄖ"
 		end
+		if plurk["content"].match /UCCU/i or plurk["content"].match /<a[^>]*href="http:\/\/www.plurk.com\/andy810625"[^>]*>/ # @andy810625
+			resp << UCCU_EMOS.sample
+		end
+		return if resp.empty?
+		responsePlurk(plurk["plurk_id"], resp % " ")
 		@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 	end
 
