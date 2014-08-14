@@ -147,7 +147,7 @@ class KeKeRi
 			resp << UCCU_EMOS.sample
 		end
 		return if resp.empty?
-		responsePlurk(plurk["plurk_id"], resp % " ")
+		responsePlurk(plurk["plurk_id"], resp * " ")
 		@plurkApi.post '/APP/Timeline/mutePlurks', ids: [[plurk["plurk_id"]]]
 	end
 
