@@ -130,13 +130,41 @@ class KeKeRi
 		true
 	end
 
-	UCCU_EMOS = [
+	UCCU_KE_EMOS = [
 		[%(http://emos.plurk.com/c24f5a2d357cf6bed76097cb2917135c_w48_h48.jpeg)] * 10,
 		[%(http://emos.plurk.com/c75c14b823b317b9485f551dc3be8adc_w48_h48.jpeg)] * 10,
 		[%(http://emos.plurk.com/e01d1a6e849e6fc957a551fdc8f8d189_w48_h48.png)] * 10,
 		[%(http://emos.plurk.com/4307884b41c65c081c00d7a707b3457a_w48_h48.png)] * 10,
 		[%(http://emos.plurk.com/2ab4aa6dfacda9b2443a083915bef84f_w48_h48.jpeg --Double Kill--)] * 1
 	].flatten
+	UCCU_EMOS = %W(
+		//emos.plurk.com/0ff9b6499d9fc067076299e4e84cb9f9_w48_h48.jpeg
+		//emos.plurk.com/40727c48d696d04cbdc8461205e8d127_w48_h48.jpeg
+		//emos.plurk.com/0dda843baf91d5fc522416746e470d8a_w43_h48.png
+		//emos.plurk.com/0159d81c5f0d0eee1679d1546a16d430_w48_h48.jpeg
+		//emos.plurk.com/d560946c25c7238688f1920de0127d33_w48_h48.jpeg
+		//emos.plurk.com/54a61a948246082c94245b31fc3eb22f_w48_h48.jpeg
+		//emos.plurk.com/4732b82e8d81f1a147cf5f32ea8f189e_w48_h48.jpeg
+		//emos.plurk.com/df73fcc3007ead42cc871049677d5e58_w48_h48.jpeg
+		//emos.plurk.com/a428060b74d0f7f46d72f50eb3ffe8e9_w48_h48.jpeg
+		//emos.plurk.com/ce5f816d361977120209f9ecba5b5fc1_w48_h48.jpeg
+		//emos.plurk.com/94accbcde00b9f8e85721a8df10b2acc_w48_h48.jpeg
+		//emos.plurk.com/1815edc3b780b32136a10775878121d8_w48_h48.jpeg
+		//emos.plurk.com/785a8439633d9cc2343bd0b25d4446b7_w48_h48.jpeg
+		//emos.plurk.com/16b7f9906d55be0fabf3d0bbbd35d86a_w48_h48.jpeg
+		//emos.plurk.com/7618969bf18f69f64db8e41750159c5a_w48_h48.jpeg
+		//emos.plurk.com/fb20cd88b72e8af6378228d764b68996_w48_h48.jpeg
+		//emos.plurk.com/266e229f51fb03183241c458c7ecd859_w48_h48.jpeg
+		//emos.plurk.com/b3a65f97fb489e4e97c9f613d486bae7_w48_h48.gif
+		//emos.plurk.com/b6fbf8deeb375f417ecb8e290bfd7ca5_w48_h48.jpeg
+		//emos.plurk.com/c75c14b823b317b9485f551dc3be8adc_w48_h48.jpeg
+		//emos.plurk.com/c24f5a2d357cf6bed76097cb2917135c_w48_h48.jpeg
+		//emos.plurk.com/e01d1a6e849e6fc957a551fdc8f8d189_w48_h48.png
+		//emos.plurk.com/2ab4aa6dfacda9b2443a083915bef84f_w48_h48.jpeg
+		//emos.plurk.com/4307884b41c65c081c00d7a707b3457a_w48_h48.png
+		//emos.plurk.com/2eed93c518b44ed937e1d8d82fe83fd5_w48_h48.jpeg
+		//emos.plurk.com/738d3c68a21ef02777ea0f964d96e030_w48_h48.jpeg
+	)
 	def responseNewPlurk(plurk)
 		return unless responsed? plurk["plurk_id"]
 		resp = []
@@ -144,7 +172,15 @@ class KeKeRi
 			resp << "ㄎ__ㄖ"
 		end
 		if plurk["content"].match /UCCU/i or plurk["content"].match /<a[^>]*href="http:\/\/www.plurk.com\/andy810625"[^>]*>/ # @andy810625
-			resp << UCCU_EMOS.sample
+			resp << UCCU_KE_EMOS.sample
+		else
+			any_uccu_emos = false
+			plurk["content"].scan /<img[^>]*href="([^"]*)"[^>]*>/ do |emo|
+				UCCU_EMOS.each do |uccu|
+					any_uccu_emos = true if emo[uccu]
+				end
+			end
+			resp << UCCU_KE_EMOS.sample if any_uccu_emos
 		end
 		return if resp.empty?
 		responsePlurk(plurk["plurk_id"], resp * " ")
