@@ -176,6 +176,8 @@ class KeKeRi
 		else
 			any_uccu_emos = false
 			plurk["content"].scan /<img[^>]*src="([^"]*)"[^>]*>/ do |emo|
+				return if emo.empty?
+				emo = emo[0]
 				UCCU_EMOS.each do |uccu|
 					any_uccu_emos = true if emo[uccu]
 				end
