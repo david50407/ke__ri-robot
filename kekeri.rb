@@ -175,7 +175,7 @@ class KeKeRi
 			resp << UCCU_KE_EMOS.sample
 		else
 			any_uccu_emos = false
-			plurk["content"].scan /<img[^>]*href="([^"]*)"[^>]*>/ do |emo|
+			plurk["content"].scan /<img[^>]*src="([^"]*)"[^>]*>/ do |emo|
 				UCCU_EMOS.each do |uccu|
 					any_uccu_emos = true if emo[uccu]
 				end
