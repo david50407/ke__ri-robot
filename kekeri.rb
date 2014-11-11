@@ -168,34 +168,33 @@ class KeKeRi
 	def responseNewPlurk(plurk)
 		return unless responsed? plurk["plurk_id"]
 		resp = []
-		if plurk["owner_id"] == 10428113 # bot id
+		case plurk["owner_id"]
+		when 10428113 # bot id
 			case plurk["content"]
 			when /今日ㄎ_ㄖ指數/
 				resp << "ㄎ＿ㄖ的粉專是「 https://www.facebook.com/IamMasterILoveLoly (無限期支持蘿莉控ㄎ＿ㄖ大濕) 」\n" + 
-								"歡迎大家相邀厝邊頭尾、親朋好友及舊雨新知來按讚！ " + UCCU_KE_EMOS.sample
+					"歡迎大家相邀厝邊頭尾、親朋好友及舊雨新知來按讚！ " + UCCU_KE_EMOS.sample
 			end
-		else
-			if plurk["owner_id"] == 5845208
-				if plurk["content"].match /無聊/
-					responsePlurk(plurk["plurk_id"], "無聊嗎? 聽我講個笑話吧~ 有一個人叫ㄎ_ㄖ然後他就被ㄎ_ㄖ了...(lmao)", { qualifier: 'says' })
-				else
-					resp << "ㄎ__ㄖ"
-				end
-			elsif plurk["content"].match /ㄎ[_＿]*ㄖ/
-				resp << "ㄎ__ㄖ"
-			end
-			if plurk["content"].match /UCCU/i or plurk["content"].match /<a[^>]*href="http:\/\/www.plurk.com\/andy810625"[^>]*>/ # @andy810625
-				resp << UCCU_KE_EMOS.sample
+		when 5845208 # andy810625
+			if plurk["content"].match /無聊/
+				responsePlurk(plurk["plurk_id"], "無聊嗎? 聽我講個笑話吧~ 有一個人叫ㄎ_ㄖ然後他就被ㄎ_ㄖ了...(lmao)", { qualifier: 'says' })
 			else
-				any_uccu_emos = false
-				plurk["content"].scan /<img[^>]*src="([^"]*)"[^>]*>/ do |emo|
-					return if emo.empty?
-					emo = emo[0]
-					UCCU_EMOS.each do |uccu|
-						any_uccu_emos = true if emo[uccu]
-					end
+				if rand(100) > 12
+					resp << "ㄎ__ㄖ"
+				else
+					resp << "我說我是蘿莉控，當時是為了向這個社會證明雨神的ㄎㄖ是真的。\n" +
+						"我這樣講，是為了整個ㄎㄖ神社的和諧，可是你今天在講我是蘿莉控的時候，你是在撕裂整個社會，謀的是你個人的政治利益。\n" +
+						"我看待蘿莉控，跟看待你一樣，你們都是我的獵物。作為ㄎㄖ，你們都是獵物而已。"
 				end
-				resp << UCCU_KE_EMOS.sample if any_uccu_emos
+			end
+		else # others
+			case plurk["content"]
+			when	/ㄎ[_＿]*ㄖ/
+				resp << "ㄎ__ㄖ"
+			when /UCCU/i, /<a[^>]*href="http:\/\/www.plurk.com\/andy810625"[^>]*>/ # @andy810625
+				resp << UCCU_KE_EMOS.sample
+			when *UCCU_EMOS.map { |uccu| /<img[^>]*src="[^"]*#{uccu}"[^>]*>/ }
+				resp << UCCU_KE_EMOS.sample
 			end
 		end
 		return if resp.empty?
