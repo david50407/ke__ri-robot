@@ -195,6 +195,8 @@ class KeKeRi
 				resp << UCCU_KE_EMOS.sample
 			when *UCCU_EMOS.map { |uccu| /<img[^>]*src="[^"]*#{uccu}"[^>]*>/ }
 				resp << UCCU_KE_EMOS.sample
+			when /笑話/, /好笑/, /XD/i, /\/\/s\.plurk\.com\/92b595a573d25dd5e39a57b5d56d4d03\.gif/, /\/\/s\.plurk\.com\/615f18f7ea8abc608c4c20eaa667883b\.gif/, /\/\/s\.plurk\.com\/8600839dc03e6275b53fd03a0eba09cf\.gif/
+				resp << "有一個人很機車，他就被騎走了，有一隻猴子叫ㄎㄖ，他就被……咦，我還以為我記得這個笑話說。"
 			end
 		end
 		return if resp.empty?
